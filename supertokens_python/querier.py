@@ -12,6 +12,8 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 from __future__ import annotations
+import logging
+import traceback
 
 from json import JSONDecodeError
 from os import environ
@@ -36,6 +38,9 @@ from typing import List, Set, Union
 from .exceptions import raise_general_exception
 from .process_state import AllowedProcessStates, ProcessState
 from .utils import find_max_version, is_4xx_error, is_5xx_error
+
+
+logger = logging.getLogger(__name__)
 
 
 class Querier:
@@ -264,7 +269,16 @@ class Querier:
             except JSONDecodeError:
                 return response.text
 
-        except (ConnectionError, NetworkError, ConnectTimeout):
+        except (ConnectionError, NetworkError, ConnectTimeout) as e:
+            logger.warning(
+                "Could not connect to SuperTokens core, will try again. Please check "
+                + "your SuperTokens core and make sure it is running at "
+                + current_host
+                + ". Error message: "
+                + str(e)
+            )
+            traceback.print_exc()
+
             return await self.__send_request_helper(
                 path, method, http_function, no_of_tries - 1
             )
