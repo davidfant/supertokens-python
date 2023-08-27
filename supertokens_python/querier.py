@@ -270,13 +270,8 @@ class Querier:
                 return response.text
 
         except (ConnectionError, NetworkError, ConnectTimeout) as e:
-            logger.warning(
-                "Could not connect to SuperTokens core, will try again. Please check "
-                + "your SuperTokens core and make sure it is running at "
-                + current_host
-                + ". Error message: "
-                + str(e)
-            )
+            logger.warning("Could not connect to SuperTokens core")
+            logger.exception(e)
             traceback.print_exc()
 
             return await self.__send_request_helper(
