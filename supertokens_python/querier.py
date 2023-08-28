@@ -271,7 +271,9 @@ class Querier:
 
         except (ConnectionError, NetworkError, ConnectTimeout) as e:
             logger.warning("Could not connect to SuperTokens core")
-            logger.exception(e)
+            print(e)
+            print('Supertokens error class', e.__class__)
+            logger.error('Stack trace:')
             traceback.print_exc()
 
             return await self.__send_request_helper(
