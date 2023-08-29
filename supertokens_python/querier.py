@@ -272,7 +272,7 @@ class Querier:
         except (ConnectionError, NetworkError, ConnectTimeout) as e:
             logger.warning("Could not connect to SuperTokens core")
             print(e)
-            print('Supertokens error class', e.__class__)
+            print('Supertokens error class', e.__class__, url)
             logger.error('Stack trace:')
             traceback.print_exc()
 
